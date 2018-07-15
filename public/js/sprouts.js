@@ -1,30 +1,46 @@
 // YOUR CODE GOES HERE
-$(window).scroll(function(e) {
-  var scrollAmount = $(window).scrollTop();
-  var documentHeight = $(document).height();
+// $(window).scroll(function() {
+//   event.preventDefault();
+//   var scrollAmount = $(window).scrollTop();
+//   var documentHeight = $(document).height();
+//   var scrollPercent = (scrollAmount / documentHeight) * 100;
+//   let pageNum = 1;
+//   if (scrollPercent > 70) {
+//     let request = $.ajax({
+//       method: 'GET',
+//       url: '/tweets.json?page=' + pageNum,
+//       dataType: 'json'
+//     });
+//
+//     request.done((data) => {
+//       console.log(data);
+//       pageNum ++;
+//     });
+//   }
+//
+// });
 
-  var scrollPercent = (scrollAmount / documentHeight) * 100;
+$(function(){
+  var scrollFunction = function(){
+    var mostOfTheWayDown = ($(document).height() - $(window).height()) * 2 / 3;
+      if ($(window).scrollTop() >= mostOfTheWayDown) {
+        $(window).unbind("scroll");
+        let request = $.ajax({
+          url: "/tweets.json",
+          page: { 1 : 10 },
+          dataType: "json",
+          type: "GET",
+          success: function(json){
+          //some work here
 
-  if (scrollPercent > 70) {
-    // run a function called doSomething
-       doSomething();
+          $(window).scroll(scrollFunction);
+          }
+      });
     }
+  };
+  $(window).scroll(scrollFunction);
+});​
 
-    function doSomething() {
-
-        // do something when a user gets 50% of the way down my page
-    }
-
-    let request = $.ajax({
-      method: 'GET',
-      url: '/tweets.json'
-    });
-
-    request.done((thing) => {
-
-    });
-
-});
 
 //   event.preventDefault();
 //   // let newDishContent = $('#dish-content').val();

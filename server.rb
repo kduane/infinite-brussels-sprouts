@@ -1,7 +1,8 @@
 require "sinatra"
 require "csv"
 require "json"
-
+require "sinatra/reloader"
+require "pry"
 set :bind, '0.0.0.0'  # bind to all interfaces
 
 TWEETS_PER_PAGE = 10
@@ -34,4 +35,5 @@ end
 get "/tweets.json" do
   content_type :json
   tweets(page(params[:page])).to_json
+  binding.pry
 end
