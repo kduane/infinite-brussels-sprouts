@@ -19,43 +19,52 @@
 //   }
 //
 // });
+let pageNum = 2;
 
-$(function(){
-  var scrollFunction = function(){
-    var mostOfTheWayDown = ($(document).height() - $(window).height()) * 2 / 3;
-      if ($(window).scrollTop() >= mostOfTheWayDown) {
-        $(window).unbind("scroll");
-        let request = $.ajax({
-          url: "/tweets.json",
-          page: { 1 : 10 },
-          dataType: "json",
-          type: "GET",
-          success: function(json){
-          //some work here
+function addTweets() {
+  let tweets = $.ajax({
+    method: "GET",
+    url: "/tweets.json?page=" + pageNum
+  });
 
-          $(window).scroll(scrollFunction);
-          }
-      });
-    }
-  };
-  $(window).scroll(scrollFunction);
-});​
+  function getTweets(tweets) {
+    tweets.forEach(tweet => {
+      var newTweet = "<li class = 'tweet'><div class='body'>" + tweet["text"] +
+      "</div><div class='user'>" + tweet["username"] + "</div></li>";
+      $('.tweets').append(newTweet);
+    });
+  }
+
+  tweets.done(function(data) {
+    getTweets(data);
+    pageNum++;
+  });
+}
+
+window.onscroll = function(event) {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+	    addTweets();
+	  }
+};
 
 
-//   event.preventDefault();
-//   // let newDishContent = $('#dish-content').val();
-//
-//   let request = $.ajax({
-//     method: 'GET',
-//     // data: { content: newDishContent },
-//     url: '/new-dish.json'
-//   });
-//
-//   request.done((newDish) => {
-//     // $('ul.dishes').append('<li>' + newDishContent + '</li>');
-//     // $('#dish-content').val('');
-//     $('#dish').text(newDish['dish']);
-//     alert('New dish available');
-//   });
-//
-// });
+// $(function(){
+//   var scrollFunction = function(){
+//     var mostOfTheWayDown = ($(document).height() - $(window).height()) * 2 / 3;
+//       if ($(window).scrollTop() >= mostOfTheWayDown) {
+//         $(window).unbind("scroll");
+//         let request = $.ajax({
+//           url: "/tweets.json?page=" + pageNum,
+//           type: "GET",
+//           success: function(data){
+//             pageNum ++;
+//             data['tweets'].forEach(function(tweet) {
+//               $('#tweets').append('<li>' + tweet + '</li>');
+//             });
+//           $(window).scroll(scrollFunction);
+//         }
+//       });
+//     }
+//   };
+//   $(window).scroll(scrollFunction);
+// });​
